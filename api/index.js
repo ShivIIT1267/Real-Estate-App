@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 dotenv.config();
 
 import userRouter from "./routes/user.route.js";
+import authRouter from "./routes/auth.user.js";
 
 mongoose
   .connect(process.env.MONGO)
@@ -14,6 +15,8 @@ mongoose
     console.log(err);
   });
 const app = express();
+
+app.use(express.json());
 
 app.listen(3000, () => {
   console.log("Server is running on port 3000");
@@ -26,3 +29,4 @@ app.listen(3000, () => {
 // we dont create such api routs for all the pages, instead we will go to another folder and create api routes over there
 
 app.use("/api/user", userRouter);
+app.use("/api/auth", authRouter);
