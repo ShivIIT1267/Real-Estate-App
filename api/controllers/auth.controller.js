@@ -1,6 +1,6 @@
 import User from "../models/user.model.js";
 import bcrypt from "bcryptjs";
-export const signup = async (req, res) => {
+export const signup = async (req, res, next) => {
   // the api will take input and now we want to store it in
   // our database
 
@@ -14,6 +14,7 @@ export const signup = async (req, res) => {
     await newUser.save();
     res.status(201).json("User Created Successfully");
   } catch (error) {
-    res.status(500).json(error.message);
+    // later in project we can try to have manual errors.
+    next(error);
   }
 };
