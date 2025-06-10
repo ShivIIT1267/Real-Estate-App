@@ -1,16 +1,19 @@
 import React from "react";
 import { useState } from "react";
-
-// link will be used to pass to the sign in if the user already has an account
-
-// the usage of form data thing is to be remembered as this will be used in all websites
-
+import { useDispatch, useSelector } from "react-redux";
+import {
+  signInStart,
+  signInSuccess,
+  signInFailure,
+} from "../redux/user/userSlice";
 import { Link, useNavigate } from "react-router-dom";
+
 export default function SignIn() {
   const [formData, setFormData] = useState({});
-  const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const { loading, error } = useSelector((state) => state.user);
+  const dispatch = useDispatch(); // Fixed: Added dispatch
   const navigate = useNavigate();
+
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -22,7 +25,7 @@ export default function SignIn() {
     e.preventDefault();
 
     try {
-      setLoading(true);
+      dispatch(signInStart()); // Fixed: Use dispatch instead of setLoading
       const res = await fetch("/api/auth/signin", {
         method: "POST",
         headers: {
@@ -33,16 +36,13 @@ export default function SignIn() {
       const data = await res.json();
       console.log(data);
       if (data.success === false) {
-        setError(data.message);
-        setLoading(false);
+        dispatch(signInFailure(data.message)); // Fixed: Use dispatch instead of dispatchEvent
         return;
       }
-      setLoading(false);
-      setError(null);
+      dispatch(signInSuccess(data)); // Fixed: Use dispatch instead of dispatchEvent
       navigate("/");
     } catch (error) {
-      setLoading(false);
-      setError(error.message);
+      dispatch(signInFailure(error.message)); // Fixed: Use error.message instead of data.message
     }
   };
 
@@ -53,28 +53,30 @@ export default function SignIn() {
         <input
           type="text"
           placeholder="email"
-          className="border p-3 rounded lg"
+          className="border p-3 rounded-lg" // Fixed: rounded-lg instead of rounded lg
           id="email"
           onChange={handleChange}
-        ></input>
+        />
         <input
           type="password"
           placeholder="password"
-          className="border p-3 rounded lg"
+          className="border p-3 rounded-lg" // Fixed: rounded-lg instead of rounded lg
           id="password"
           onChange={handleChange}
-        ></input>
+        />
         <button
           disabled={loading}
-          className="bg-slate-700 text-white p-3 rounded-lg uppercase hover:opacity-95 disabled : 80"
+          className="bg-slate-700 text-white p-3 rounded-lg uppercase hover:opacity-95 disabled:opacity-80" // Fixed: disabled:opacity-80
         >
           {loading ? "Loading.." : "Sign In"}
         </button>
       </form>
 
       <div className="flex gap-2 mt-5">
-        <p>Dont Have an Account ?</p>
-        <Link to={"/signin"}>
+        <p>Don't Have an Account?</p>
+        <Link to={"/signup"}>
+          {" "}
+          {/* Fixed: Changed to /signup instead of /signin */}
           <span className="text-blue-700">Sign Up</span>
         </Link>
       </div>
