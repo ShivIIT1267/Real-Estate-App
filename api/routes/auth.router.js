@@ -3,7 +3,7 @@
 import express from "express";
 
 // we import the required res and req data from another file
-import { signup } from "../controllers/auth.controller.js";
+import { signin, signup } from "../controllers/auth.controller.js";
 
 // creating the router
 const router = express.Router();
@@ -12,5 +12,6 @@ const router = express.Router();
 // be sending the data from the website to the server
 // while .get will be for displying anything
 router.post("/signup", signup);
+router.post("/signin", signin);
 
 export default router;
