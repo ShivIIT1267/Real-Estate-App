@@ -20,6 +20,11 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    avatar: {
+      type: String,
+      default:
+        "https://www.google.com/url?sa=i&url=https%3A%2F%2Fpixabay.com%2Fvectors%2Fblank-profile-picture-mystery-man-973460%2F&psig=AOvVaw0g-Mcb0JHgchQU0QHSkACq&ust=1749651288513000&source=images&cd=vfe&opi=89978449&ved=0CBEQjRxqFwoTCLjZiaWF540DFQAAAAAdAAAAABAE",
+    },
   },
   { timestamps: true }
 );
