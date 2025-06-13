@@ -1,7 +1,7 @@
 import { useSelector } from "react-redux";
 
 import { useRef, useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { deleteUser } from "firebase/auth";
 import {
@@ -131,6 +131,12 @@ export default function Profile() {
         <button className="bg-slate-700 text-white rounded-lg p-3 uppercase hover:opacity-95 disabled:opacity-80">
           update
         </button>
+        <Link
+          className="bg-green-700 text-white p-3 rounded-lg uppercase text-center hover : opacity-95  disabled:opacity-80"
+          to={"/create-listing"}
+        >
+          Create Listing
+        </Link>
       </form>
 
       <div className="flex justify-between mt-5">
