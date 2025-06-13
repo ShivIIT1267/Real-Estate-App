@@ -1,16 +1,20 @@
 import { useSelector } from "react-redux";
 
 import { useRef, useState, useEffect } from "react";
-
+import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { deleteUser } from "firebase/auth";
 import {
   deleteUserFailure,
   deleteUserStart,
   deleteUserSuccess,
+  signOutUserStart,
+  signOutUserSuccess,
+  signOutUserFailure,
   updateUserFailure,
   updateUserStart,
   updateUserSuccess,
+  logoutUser,
 } from "../redux/user/userSlice.js";
 import { current } from "@reduxjs/toolkit";
 
@@ -18,6 +22,7 @@ import { current } from "@reduxjs/toolkit";
 // using any free storage
 
 export default function Profile() {
+  const navigate = useNavigate();
   const fileRef = useRef(null);
   const [formData, setFormData] = useState({});
   const { currentUser } = useSelector((state) => state.user);
@@ -64,10 +69,28 @@ export default function Profile() {
       }
 
       dispatch(deleteUserSuccess(data));
+      dispatch(logoutUser());
+      navigate("/signup");
     } catch (error) {
       dispatch(deleteUserFailure(error.message));
     }
   };
+
+  const handleSignOut = async () => {
+    dispatch(signOutUserStart());
+    try {
+      const res = await fetch("/api/auth/signout");
+      const data = await res.json();
+      if (data.success === false) {
+        dispatch(signOutUserFailure(data.message));
+        return;
+      }
+      dispatch(signOutUserSuccess(data.message));
+    } catch (error) {
+      dispatch(signOutUserFailure(error.message));
+    }
+  };
+
   return (
     <div className="p-3 max-w-lg mx-auto">
       <h1 className="text-3xl font-semibold text-center my-7">Profile</h1>
@@ -75,7 +98,10 @@ export default function Profile() {
         <input type="file" ref={fileRef} hidden accept="image/*" />
         <img
           onClick={() => fileRef.current.click()}
-          src={currentUser.avatar}
+          src={
+            currentUser.avatar ||
+            "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
+          }
           alt="profile"
           className="rounded-full h-24 w-24 object-cover cursor-pointer self-center mt-2"
         />
@@ -114,7 +140,9 @@ export default function Profile() {
         >
           Delete account
         </span>
-        <span className="text-red-700 cursor-pointer">Sign out</span>
+        <span onClick={handleSignOut} className="text-red-700 cursor-pointer">
+          Sign out
+        </span>
       </div>
     </div>
   );
