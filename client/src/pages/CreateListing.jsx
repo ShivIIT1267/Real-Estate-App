@@ -73,6 +73,7 @@ export default function CreateListing() {
         },
         body: JSON.stringify({
           ...formData,
+          // this will help us track the user who created the listing
           userRef: currentUser._id,
         }),
       });
