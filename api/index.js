@@ -2,6 +2,7 @@ import express from "express";
 import mongoose, { mongo, MongooseError } from "mongoose";
 import dotenv from "dotenv";
 dotenv.config();
+import cors from "cors";
 
 import userRouter from "./routes/user.route.js";
 import authRouter from "./routes/auth.router.js";
@@ -15,9 +16,16 @@ mongoose
   .catch((err) => {
     console.log(err);
   });
+  
 const app = express();
 
 app.use(express.json());
+app.use(
+  cors({
+    origin: "http://localhost:5173", // or your frontend URL
+    credentials: true,
+  })
+);
 
 app.use(cookieParser());
 

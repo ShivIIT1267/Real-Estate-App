@@ -43,6 +43,7 @@ export default function SignUp() {
       navigate("/signin");
     } catch (error) {
       setLoading(false);
+      console.log(error.message);
       setError(error.message);
     }
   };
