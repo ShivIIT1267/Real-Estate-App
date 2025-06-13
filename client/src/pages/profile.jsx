@@ -17,6 +17,7 @@ import {
   logoutUser,
 } from "../redux/user/userSlice.js";
 import { current } from "@reduxjs/toolkit";
+import { set } from "mongoose";
 
 // storing and updating of image to be learnt later on
 // using any free storage
@@ -27,6 +28,8 @@ export default function Profile() {
   const [formData, setFormData] = useState({});
   const { currentUser } = useSelector((state) => state.user);
   const dispatch = useDispatch();
+  const [showListingError, setShowListingError] = useState(false);
+  const [userListings, setUserListings] = useState([]);
 
   const handleChange = async (e) => {
     setFormData({ ...formData, [e.target.id]: e.target.value });
@@ -91,6 +94,21 @@ export default function Profile() {
     }
   };
 
+  const handleShowListings = async () => {
+    try {
+      setShowListingError(false);
+      const res = await fetch(`/api/user/listings/${currentUser._id}`);
+      const data = await res.json();
+      if (data.success === false) {
+        setShowListingError(true);
+        return;
+      }
+      setUserListings(data);
+    } catch (error) {
+      setShowListingError(true);
+    }
+  };
+
   return (
     <div className="p-3 max-w-lg mx-auto">
       <h1 className="text-3xl font-semibold text-center my-7">Profile</h1>
@@ -150,6 +168,46 @@ export default function Profile() {
           Sign out
         </span>
       </div>
+
+      <button
+        onClick={handleShowListings}
+        className="text-green-700 w-full hover:underline mt-2.5"
+      >
+        Show My Listings
+      </button>
+
+      <p className="text-red-700 mt-5">
+        {showListingError ? "Error showing listings" : ""}
+      </p>
+
+      {userListings &&
+        userListings.length > 0 &&
+        userListings.map((listing) => (
+          <div
+            key={listing._id}
+            className="border rounded-lg p-3 flex justify-between items-center gap-4"
+          >
+            <Link to={`/listing/${listing._id}`}>
+              <img
+                src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSRbcrj53mGyk-u4JwrIb6z1RBAeCpxR78gfQ&s"
+                alt="listing cover"
+                className="h-16 w-16 object-contain"
+              ></img>
+            </Link>
+
+            <Link
+              to={`/listing/${listing._id}`}
+              className="font-semibold text-slate-700 flex-1 hover:underline truncate"
+            >
+              <p>{listing.name}</p>
+            </Link>
+
+            <div className="flex flex-col items-center ">
+              <button className="text-red-700 uppercase"> DELETE</button>
+              <button className="text-red-700 uppercase"> EDIT</button>
+            </div>
+          </div>
+        ))}
     </div>
   );
 }
