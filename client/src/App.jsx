@@ -7,6 +7,7 @@ import SignUp from "./pages/SignUp.jsx";
 import CreateListing from "./pages/CreateListing.jsx";
 import UpdateListing from "./pages/UpdateListing.jsx";
 import PrivateRoute from "./Components/PrivateRoute.jsx";
+import Listing from "./pages/listing.jsx";
 export default function App() {
   return (
     <BrowserRouter>
@@ -22,6 +23,7 @@ export default function App() {
           />
         </Route>
         <Route path="/signin" element={<Signin />} />
+        <Route path="/listing/:listingId" element={<Listing />} />
         <Route path="/signup" element={<SignUp />} />
       </Routes>
     </BrowserRouter>

@@ -9,7 +9,11 @@ export default function CreateListing() {
   const currentUser = useSelector((state) => state.user.currentUser);
   const Navigate = useNavigate();
   const [formData, setFormData] = useState({
-    imageUrls: [],
+    imageUrls: [
+      "https://media.istockphoto.com/id/682432560/photo/stunning-luxury-home-exterior-at-sunset.jpg?s=612x612&w=0&k=20&c=NApF0vAI8wppLkNX73wWRxXUO2nyLHCB6peu38k2rtI=",
+      "https://media.hswstatic.com/eyJidWNrZXQiOiJjb250ZW50Lmhzd3N0YXRpYy5jb20iLCJrZXkiOiJnaWZcL2JpZ2dlc3QtaG91c2VzLTEuanBnIiwiZWRpdHMiOnsicmVzaXplIjp7IndpZHRoIjo4Mjh9fX0=",
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTdeJ_z4PKE4QsjPgqWjCeh85vGQC9a-kkqVg&s",
+    ],
     name: "",
     description: "",
     address: "",
