@@ -226,13 +226,13 @@ export default function Profile() {
                 onClick={() => handleListingDelete(listing._id)}
                 className="text-red-700 uppercase hover:cursor-pointer"
               >
-                {" "}
                 DELETE
               </button>
-              <button className="text-green-700 uppercase hover:cursor-pointer">
-                {" "}
-                EDIT
-              </button>
+              <Link to={`/update-listing/${listing._id}`}>
+                <button className="text-green-700 uppercase hover:cursor-pointer">
+                  EDIT
+                </button>
+              </Link>
             </div>
           </div>
         ))}
