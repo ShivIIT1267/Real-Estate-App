@@ -12,6 +12,7 @@ import {
   FaParking,
   FaChair,
 } from "react-icons/fa";
+import Contact from "../Components/Contact.jsx";
 
 export default function Listing() {
   SwiperCore.use([Navigation]);
@@ -128,6 +129,7 @@ export default function Listing() {
             Contact landlord
           </button>
         )}
+        {contact && <Contact listing={listing} />}
       </div>
     </>
   );
