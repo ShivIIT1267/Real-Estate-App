@@ -56,11 +56,14 @@ export default function Listing() {
   return (
     <>
       <div className="w-full">
-        <Swiper navigation>
+        <Swiper
+          navigation
+          className="w-full max-h-[420px] rounded-md overflow-hidden"
+        >
           {listing?.imageUrls?.map((url) => (
             <SwiperSlide key={url}>
               <div
-                className="w-[800] h-[400px] bg-center bg-cover bg-no-repeat"
+                className="w-full h-[400px] bg-center bg-cover bg-no-repeat"
                 style={{ backgroundImage: `url(${url})` }}
               ></div>
             </SwiperSlide>
@@ -68,55 +71,55 @@ export default function Listing() {
         </Swiper>
       </div>
 
-      <div className="flex flex-col max-w-4xl mx-auto p-3 my-7 gap-4">
-        <p className="text-2xl font-semibold">
-          {listing.name} - ${" "}
+      <div className="flex flex-col max-w-4xl mx-auto p-4 my-10 gap-6 bg-white rounded-xl shadow-md">
+        <p className="text-2xl font-bold text-slate-800">
+          {listing.name} – ₹
           {listing.offer
-            ? listing.discountPrice.toLocaleString("en-US")
-            : listing.regularPrice.toLocaleString("en-US")}
+            ? listing.discountPrice.toLocaleString("en-IN")
+            : listing.regularPrice.toLocaleString("en-IN")}
           {listing.type === "rent" && " / month"}
         </p>
 
-        <p className="flex items-center mt-6 gap-2 text-slate-600 text-sm">
+        <p className="flex items-center gap-2 text-slate-600 text-sm">
           <FaMapMarkerAlt className="text-green-700" />
           {listing.address}
         </p>
 
-        <div className="flex gap-4">
-          <p className="bg-red-900 w-full max-w-[200px] text-white text-center p-1 rounded-md">
+        <div className="flex gap-4 flex-wrap">
+          <p className="bg-red-700 text-white text-center py-1 px-4 rounded-md text-sm font-medium">
             {listing.type === "rent" ? "For Rent" : "For Sale"}
           </p>
           {listing.offer && (
-            <p className="bg-green-900 w-full max-w-[200px] text-white text-center p-1 rounded-md">
-              ${+listing.regularPrice - +listing.discountPrice} OFF
+            <p className="bg-green-700 text-white text-center py-1 px-4 rounded-md text-sm font-medium">
+              ₹{+listing.regularPrice - +listing.discountPrice} OFF
             </p>
           )}
         </div>
 
-        <p className="text-slate-800">
-          <span className="font-semibold text-black">Description - </span>
+        <p className="text-slate-700 text-justify">
+          <span className="font-semibold text-slate-900">Description: </span>
           {listing.description}
         </p>
 
-        <ul className="text-green-900 font-semibold text-sm flex flex-wrap items-center gap-4 sm:gap-6">
-          <li className="flex items-center gap-1 whitespace-nowrap">
-            <FaBed className="text-lg" />
+        <ul className="text-green-800 font-medium text-sm flex flex-wrap items-center gap-6 mt-2">
+          <li className="flex items-center gap-1">
+            <FaBed className="text-base" />
             {listing.bedrooms > 1
-              ? `${listing.bedrooms} beds`
-              : `${listing.bedrooms} bed`}
+              ? `${listing.bedrooms} Beds`
+              : `${listing.bedrooms} Bed`}
           </li>
-          <li className="flex items-center gap-1 whitespace-nowrap">
-            <FaBath className="text-lg" />
+          <li className="flex items-center gap-1">
+            <FaBath className="text-base" />
             {listing.bathrooms > 1
-              ? `${listing.bathrooms} baths`
-              : `${listing.bathrooms} bath`}
+              ? `${listing.bathrooms} Baths`
+              : `${listing.bathrooms} Bath`}
           </li>
-          <li className="flex items-center gap-1 whitespace-nowrap">
-            <FaParking className="text-lg" />
+          <li className="flex items-center gap-1">
+            <FaParking className="text-base" />
             {listing.parking ? "Parking spot" : "No Parking"}
           </li>
-          <li className="flex items-center gap-1 whitespace-nowrap">
-            <FaChair className="text-lg" />
+          <li className="flex items-center gap-1">
+            <FaChair className="text-base" />
             {listing.furnished ? "Furnished" : "Unfurnished"}
           </li>
         </ul>
@@ -124,9 +127,9 @@ export default function Listing() {
         {currentUser && listing.userRef !== currentUser._id && !contact && (
           <button
             onClick={() => setContact(true)}
-            className="bg-slate-700 text-white rounded-lg uppercase hover:opacity-95 p-3"
+            className="bg-slate-800 text-white rounded-lg uppercase hover:opacity-90 px-6 py-3 font-semibold transition"
           >
-            Contact landlord
+            Contact Landlord
           </button>
         )}
         {contact && <Contact listing={listing} />}

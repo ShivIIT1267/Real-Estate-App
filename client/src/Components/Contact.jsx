@@ -42,12 +42,18 @@ export default function Contact({ listing }) {
             className="w-full p-4 text-sm border rounded-lg border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-gray-500 resize-none shadow-sm"
           ></textarea>
           {message.trim() !== "" && (
-            <Link
-              to={`mailto:${landlord.email}?subject=Regarding ${listing.name}&body=${message}`}
+            <a
+              href={`https://mail.google.com/mail/?view=cm&fs=1&to=${
+                landlord.email
+              }&su=${encodeURIComponent(
+                "Regarding " + listing.name
+              )}&body=${encodeURIComponent(message)}`}
+              target="_blank"
+              rel="noreferrer"
               className="w-fit px-6 py-3 text-sm font-semibold text-white bg-gradient-to-r from-blue-600 to-blue-500 rounded-xl shadow-md hover:shadow-lg hover:from-blue-700 hover:to-blue-600 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
             >
-              Send Message
-            </Link>
+              Send via Gmail
+            </a>
           )}
         </div>
       )}
