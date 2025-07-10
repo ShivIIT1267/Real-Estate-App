@@ -1,5 +1,5 @@
 import { useSelector } from "react-redux";
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import {
@@ -14,6 +14,18 @@ import {
   updateUserSuccess,
   logoutUser,
 } from "../redux/user/userSlice.js";
+import {
+  getDownloadURL,
+  getStorage,
+  uploadBytesResumable,
+} from "firebase/storage";
+import { app } from "../firebase.js";
+import { ref } from "firebase/storage";
+// firebase storage
+
+// allow read;
+//       allow write: if request.resource.size < 1024 * 1024 &&
+//                     request.resource.contentType.matches('image/.*');
 
 export default function Profile() {
   const navigate = useNavigate();
@@ -23,6 +35,41 @@ export default function Profile() {
   const dispatch = useDispatch();
   const [showListingError, setShowListingError] = useState(false);
   const [userListings, setUserListings] = useState([]);
+  const [file, setFile] = useState(undefined);
+  const [filePerc, setFilePerc] = useState(0);
+  const [fileUploadError, setFileUploadError] = useState(false);
+
+  useEffect(() => {
+    if (file) {
+      handleFileUpload(file);
+    }
+  }, [file]);
+
+  const handleFileUpload = (file) => {
+    const storage = getStorage(app);
+    const fileName = new Date().getTime() + file.name;
+    const storageRef = ref(storage, fileName);
+    const uploadTask = uploadBytesResumable(storageRef, file);
+
+    uploadTask.on(
+      "state_changed",
+      (snapshot) => {
+        const progress =
+          (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+
+        setFilePerc(Math.round(progress));
+      },
+      (error) => {
+        setFileUploadError(true);
+      },
+
+      () => {
+        getDownloadURL(uploadTask.snapshot.ref).then((downloadUrl) => {
+          setFormData({ ...formData, avatar: downloadUrl });
+        });
+      }
+    );
+  };
 
   const handleChange = async (e) => {
     setFormData({ ...formData, [e.target.id]: e.target.value });
@@ -37,6 +84,7 @@ export default function Profile() {
         headers: {
           "Content-Type": "application/json",
         },
+        credentials: "include",
         body: JSON.stringify(formData),
       });
       const data = await res.json();
@@ -131,13 +179,16 @@ export default function Profile() {
         onSubmit={handleSubmit}
         className="bg-white shadow-md rounded-lg p-6 flex flex-col gap-4"
       >
-        <input type="file" ref={fileRef} hidden accept="image/*" />
+        <input
+          type="file"
+          ref={fileRef}
+          hidden
+          accept="image/*"
+          onChange={(e) => setFile(e.target.files[0])}
+        />
         <img
           onClick={() => fileRef.current.click()}
-          src={
-            currentUser.avatar ||
-            "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
-          }
+          src={formData.avatar || currentUser.avatar}
           alt="profile"
           className="rounded-full h-24 w-24 object-cover cursor-pointer self-center border-4 border-slate-300"
         />
