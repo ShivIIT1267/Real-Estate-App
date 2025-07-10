@@ -49,7 +49,6 @@ export default function CreateListing() {
         })
         .catch((err) => {
           setError("Image upload failed.");
-          console.error(err);
           setUploading(false);
         });
     } else {
